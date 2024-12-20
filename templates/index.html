@@ -4,8 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPO Pricing Prediction</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 50px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .tooltip {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            width: 300px;
+            text-align: left;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
     <div class="form-container">
@@ -13,79 +97,67 @@
         <form action="/predict" method="post">
             <label for="issue-size">
                 Issue Size (crores):
-                <span class="tooltip" data-tooltip="*Definition*: Total value of the IPO offering in Indian Rupees (₹).
-*Example*: For example, 500 means ₹500 crores.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: Total value of the IPO offering in Indian Rupees (₹).\n*Example*: For example, 500 means ₹500 crores.">?</span>
             </label>
             <input type="number" id="issue-size" step="0.01" name="Issue_Size(crores)" required>
 
             <label for="qib">
                 QIB Subscription:
-                <span class="tooltip" data-tooltip="*Definition*: Number of times the issue was subscribed by Qualified Institutional Buyers (QIBs).
-*Example*: For example, 2.8 means 2.8x.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: Number of times the issue was subscribed by Qualified Institutional Buyers (QIBs).\n*Example*: For example, 2.8 means 2.8x.">?</span>
             </label>
             <input type="number" id="qib" step="0.01" name="QIB" required>
 
             <label for="hni">
                 HNI Subscription:
-                <span class="tooltip" data-tooltip="*Definition*: Number of times the issue was subscribed by High Net-worth Individuals (HNIs).
-*Example*: For example, 3.5 means 3.5x.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: Number of times the issue was subscribed by High Net-worth Individuals (HNIs).\n*Example*: For example, 3.5 means 3.5x.">?</span>
             </label>
             <input type="number" id="hni" step="0.01" name="HNI" required>
 
             <label for="rii">
                 RII Subscription:
-                <span class="tooltip" data-tooltip="*Definition*: Number of times the issue was subscribed by Retail Individual Investors (RIIs).
-*Example*: For example, 4.0 means 4x.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: Number of times the issue was subscribed by Retail Individual Investors (RIIs).\n*Example*: For example, 4.0 means 4x.">?</span>
             </label>
             <input type="number" id="rii" step="0.01" name="RII" required>
 
             <label for="issue-price">
                 Issue Price (₹):
-                <span class="tooltip" data-tooltip="*Definition*: Price per share offered in the IPO in Indian Rupees (₹).
-*Example*: For example, ₹100 per share.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: Price per share offered in the IPO in Indian Rupees (₹).\n*Example*: For example, ₹100 per share.">?</span>
             </label>
             <input type="number" id="issue-price" step="0.01" name="Issue_price" required>
 
             <label for="listing-open">
                 Listing Open Price (₹):
-                <span class="tooltip" data-tooltip="*Definition*: The stock price at the time of market opening on the first trading day.
-*Example*: For example, ₹120 per share.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: The stock price at the time of market opening on the first trading day.\n*Example*: For example, ₹120 per share.">?</span>
             </label>
             <input type="number" id="listing-open" step="0.01" name="Listing_Open" required>
 
             <label for="listing-close">
                 Listing Close Price (₹):
-                <span class="tooltip" data-tooltip="*Definition*: The stock price at the time of market closing on the first trading day.
-*Example*: For example, ₹115 per share.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: The stock price at the time of market closing on the first trading day.\n*Example*: For example, ₹115 per share.">?</span>
             </label>
             <input type="number" id="listing-close" step="0.01" name="Listing_Close" required>
 
             <label for="cmp">
                 Current Market Price (₹):
-                <span class="tooltip" data-tooltip="*Definition*: The stock's current trading price in the market.
-*Example*: For example, ₹125 per share.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: The stock's current trading price in the market.\n*Example*: For example, ₹125 per share.">?</span>
             </label>
             <input type="number" id="cmp" step="0.01" name="CMP" required>
 
             <label for="market-profit">
                 Market Profit:
-                <span class="tooltip" data-tooltip="*Definition*: Indicates whether the IPO is currently profitable.
-*Example*: Use 1 for Yes and 0 for No.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: Indicates whether the IPO is currently profitable.\n*Example*: Use 1 for Yes and 0 for No.">?</span>
             </label>
             <input type="number" id="market-profit" name="Market_Profit" required>
 
             <label for="sme">
                 SME:
-                <span class="tooltip" data-tooltip="*Definition*: Indicates whether the IPO is for a Small and Medium Enterprise (SME).
-*Example*: Use 1 for Yes and 0 for No.">?</span>
+                <span class="tooltip" data-tooltip="*Definition*: Indicates whether the IPO is for a Small and Medium Enterprise (SME).\n*Example*: Use 1 for Yes and 0 for No.">?</span>
             </label>
             <input type="number" id="sme" name="SME" required>
 
             <input type="submit" value="Predict">
         </form>
-        <div class="result">
-            
-        </div>
+        <div class="result"></div>
     </div>
 </body>
 </html>
